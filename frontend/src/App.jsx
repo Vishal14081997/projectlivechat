@@ -33,11 +33,11 @@ const router = createBrowserRouter([
         ),
       },
       {
-        path: "chat/userId",
+        path: "chat/:userId",
         element: <Chat />,
       },
       {
-        path: "group/groupId",
+        path: "group/:groupId",
         element: <Group/>,
       },
       {

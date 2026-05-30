@@ -195,6 +195,7 @@ const MainLayout = () => {
             </>
           )}
         </div>
+        
       </div>
 
       {/* Right Section */}
