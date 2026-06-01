@@ -1,9 +1,83 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { IoArrowBackCircleOutline } from "react-icons/io5";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
+import { API_BASE_URL } from "../api/config";
 
 const Profile = () => {
+  const [formData, setFormData] = useState({
+    email: "",
+    fullName: "",
+    profilePic: "",
+  });
+  const [loading, setLoading] = useState(true);
+  const [updating, setUpdating] = useState(false);
+
   const navigate = useNavigate();
+  const token = localStorage.getItem("token");
+
+  const fetchProfile = async () => {
+    try {
+      setLoading(true);
+      // await new Promise((resolve)=>{
+      //   setTimeout(resolve,3000)
+      // })
+      const res = await axios.get(`${API_BASE_URL}/api/getProfile`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
+      console.log(res.data.user);
+      setFormData(res.data.user);
+    } catch (error) {
+      console.log(error.response);
+    } finally {
+      setLoading(false);
+    }
+  };
+  const handleChange = (e) => {
+    setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+    const handleUpdateProfile = async (e) => {
+    e.preventDefault();
+    setUpdating(true);
+    try {
+      const formDataToSend = new FormData();
+      formDataToSend.append("fullName", formData.fullName);
+      formDataToSend.append("email", formData.email);
+      if (formData.profilePic) {
+        formDataToSend.append("profilePic", formData.profilePic);
+      }
+      const res = await axios.put(
+        `${API_BASE_URL}/api/updateProfile`,
+        formDataToSend,
+        {
+          headers: {
+            Authorization: `Bearer ${token}`,
+            "Content-Type": "multipart/form-data",
+          },
+        },
+      );
+      const updatedUser = { ...user, ...res.data.user };
+      localStorage.setItem("user", JSON.stringify(updatedUser));
+      setFormData((prev) => ({ ...prev, profilePic: null }));
+    } catch (error) {
+      console.log(error.response?.data || error.message);
+    } finally {
+      setUpdating(false);
+    }
+  };
+  useEffect(() => {
+    fetchProfile();
+  }, []);
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-full">
+        <div className="w-15 h-15 border-4 border-[#075E54] rounded-full border-t-transparent animate-spin mx-auto "></div>
+      </div>
+    );
+  }
 
   return (
     <div className="flex flex-col h-full bg-gray-100">
@@ -22,15 +96,11 @@ const Profile = () => {
         <label className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center cursor-pointer overflow-hidden mb-3">
           <span className="text-white text-3xl font-medium">V</span>
 
-          <input
-            type="file"
-            accept="image/*"
-            className="hidden"
-          />
+          <input type="file" accept="image/*" className="hidden" />
         </label>
 
-        <p className="text-white font-medium">Vishal Singh</p>
-        <p className="text-white/70 text-sm">vishal@gmail.com</p>
+        <p className="text-white font-medium">{formData.fullName}</p>
+        <p className="text-white/70 text-sm">{formData.email}</p>
       </div>
 
       {/* Form Section */}
@@ -42,23 +112,25 @@ const Profile = () => {
 
           <div className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">
-                Full Name
-              </label>
+              <label className="text-xs text-gray-500">Full Name</label>
               <input
                 type="text"
+                name="fullName"
+                onChange={handleChange}
                 placeholder="Enter Full Name"
+                value={formData.fullName}
                 className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#00BFA5]"
               />
             </div>
 
             <div className="flex flex-col gap-1">
-              <label className="text-xs text-gray-500">
-                Email
-              </label>
+              <label className="text-xs text-gray-500">Email</label>
               <input
                 type="email"
+                name="email"
+                onChange={handleChange}
                 placeholder="Enter Email"
+                value={formData.email}
                 className="border border-gray-200 rounded-lg px-3 py-2.5 text-sm outline-none focus:border-[#00BFA5]"
               />
             </div>
@@ -66,8 +138,12 @@ const Profile = () => {
         </div>
 
         {/* Update Button */}
-        <button className="bg-primary text-white rounded-full py-3 text-sm font-medium">
-          Update Profile
+        <button
+          onClick={handleUpdateProfile}
+          disabled={updating}
+          className="bg-primary text-white rounded-full py-3 text-sm font-medium"
+        >
+          {updating ? "Updating..." : "Update Profile"}
         </button>
 
         {/* Logout Button */}

@@ -77,7 +77,7 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user._id;
-    const updateUser = await User.findByIdAndUpdate(userId, req.body, { new: true })
+    const updateUser = await User.findByIdAndUpdate(userId, req.body, { new: true }).select("-password"); 
     res.status(200).json({
       message: "profile update successfully",
       user: updateUser
@@ -114,6 +114,20 @@ const getAllContacts = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 };
+const uploadImg = async (req, res) => {
+  try {
+    console.log(req.file);
 
-module.exports = { signUp, login, getProfile, updateProfile, getAllContacts }
+    res.status(200).json({
+      success: true,
+      file: req.file,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: error.message,
+    });
+  }
+};
+
+module.exports = { signUp, login, getProfile, updateProfile, getAllContacts ,uploadImg }
 

@@ -31,7 +31,7 @@ const SignUp = () => {
     }
     try {
       setLoading(true);
-      const res = await axios.post(`${API_BASE_URL}/signup`, formData);
+      const res = await axios.post(`${API_BASE_URL}/api/signup`, formData);
       console.log(res.data);
       toast.success(res.data.message);
       setFormData({ fullName: "", email: "", password: "" });

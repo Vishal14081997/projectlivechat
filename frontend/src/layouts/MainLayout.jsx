@@ -28,7 +28,7 @@ const MainLayout = () => {
   
   const fetchContacts = async () => {
     try {
-      const res = await axios.get(`${API_BASE_URL}/getAllContacts?page=1&limit=10`,
+      const res = await axios.get(`${API_BASE_URL}/api/getAllContacts?page=1&limit=10`,
         {
           headers: {
             Authorization: `Bearer ${token}`
