@@ -103,7 +103,7 @@ const SignUp = () => {
         </button>
 
         <p className="text-center text-[14px] text-gray-600">
-          Already have an account ? <Link className="font-medium text-primary"> Sign in</Link>
+          Already have an account ? <Link to={"/login"} className="font-medium text-primary"> Sign in</Link>
         </p>
 
         <button className="flex justify-center items-center border border-gray-500 rounded-full py-2">

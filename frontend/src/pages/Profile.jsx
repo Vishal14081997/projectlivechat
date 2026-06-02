@@ -12,6 +12,8 @@ const Profile = () => {
   });
   const [loading, setLoading] = useState(true);
   const [updating, setUpdating] = useState(false);
+  const [selectedImage, setSelectedImage] = useState(null);
+  const [logoutLoading, setLogoutLoading] = useState(false);
 
   const navigate = useNavigate();
   const token = localStorage.getItem("token");
@@ -27,7 +29,7 @@ const Profile = () => {
           Authorization: `Bearer ${token}`,
         },
       });
-      console.log(res.data.user);
+      // console.log(res.data.user);
       setFormData(res.data.user);
     } catch (error) {
       console.log(error.response);
@@ -38,19 +40,19 @@ const Profile = () => {
   const handleChange = (e) => {
     setFormData((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
-    const handleUpdateProfile = async (e) => {
+  const handleUpdateProfile = async (e) => {
     e.preventDefault();
     setUpdating(true);
     try {
-      const formDataToSend = new FormData();
-      formDataToSend.append("fullName", formData.fullName);
-      formDataToSend.append("email", formData.email);
-      if (formData.profilePic) {
-        formDataToSend.append("profilePic", formData.profilePic);
+      const data = new FormData();
+      data.append("fullName", formData.fullName);
+      data.append("email", formData.email);
+      if (selectedImage) {
+        data.append("profileImage", selectedImage);
       }
       const res = await axios.put(
         `${API_BASE_URL}/api/updateProfile`,
-        formDataToSend,
+        data,
         {
           headers: {
             Authorization: `Bearer ${token}`,
@@ -58,15 +60,27 @@ const Profile = () => {
           },
         },
       );
-      const updatedUser = { ...user, ...res.data.user };
-      localStorage.setItem("user", JSON.stringify(updatedUser));
-      setFormData((prev) => ({ ...prev, profilePic: null }));
+      console.log(res.data);
+      // const updatedUser = { ...user, ...res.data.user };
+      // localStorage.setItem("user", JSON.stringify(updatedUser));
+
     } catch (error) {
-      console.log(error.response?.data || error.message);
+      console.log(error.response);
     } finally {
       setUpdating(false);
     }
   };
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setSelectedImage(file);
+    }
+  }
+  const handleLogout = async () => {
+    setLogoutLoading(true);
+    localStorage.clear();
+    navigate("/login")
+  }
   useEffect(() => {
     fetchProfile();
   }, []);
@@ -94,9 +108,20 @@ const Profile = () => {
       {/* Profile Header */}
       <div className="bg-primary pb-8 pt-4 flex flex-col items-center">
         <label className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center cursor-pointer overflow-hidden mb-3">
-          <span className="text-white text-3xl font-medium">V</span>
+          {
+            selectedImage || formData.profilePic ? (
+              <img
+                src={selectedImage ? URL.createObjectURL(selectedImage) : formData.profilePic}
+                className="w-full h-full object-cover rounded-full"
+              />
 
-          <input type="file" accept="image/*" className="hidden" />
+            ) : (
+              <span className="text-white text-3xl font-medium">
+                {formData.fullName?.charAt(0)?.toUpperCase()}
+              </span>
+            )
+          }
+          <input type="file" accept="image/*" className="hidden" onChange={handleImageChange} />
         </label>
 
         <p className="text-white font-medium">{formData.fullName}</p>
@@ -147,8 +172,17 @@ const Profile = () => {
         </button>
 
         {/* Logout Button */}
-        <button className="bg-red-500 text-white rounded-full py-3 text-sm font-medium">
-          Logout
+        <button
+          onClick={handleLogout}
+          disabled={logoutLoading}
+          className="bg-red-500 text-white rounded-full py-3 text-sm font-medium flex justify-center items-center">
+          {logoutLoading ? (
+            <>
+              <div className="w-4 h-4 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            </>
+          ) : (
+            "Logout"
+          )}
         </button>
       </div>
     </div>

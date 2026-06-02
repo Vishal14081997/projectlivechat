@@ -4,16 +4,16 @@ const jwt = require("jsonwebtoken")
 
 const signUp = async (req, res) => {
   try {
-    const { email, phoneNo = "1234567890", fullName, password } = req.body
+    const { email, fullName, password } = req.body
 
-    if (!email || !phoneNo || !fullName || !password) {
+    if (!email || !fullName || !password) {
       return res.status(400).json({ message: "All fields are required" })
     }
 
     const user = await User.findOne({ email })
     if (user) return res.status(400).json({ message: "user alredy exists" })
 
-    const newUser = await User.create({ email, phoneNo, fullName, password })
+    const newUser = await User.create({ email , fullName, password })
 
     res.status(201).json({
       message: "Account create successfully",
@@ -77,7 +77,20 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user._id;
-    const updateUser = await User.findByIdAndUpdate(userId, req.body, { new: true }).select("-password"); 
+    const updateData = {};
+
+    if (req.body.fullName) {
+      updateData.fullName = req.body.fullName;
+    }
+
+    if (req.body.email) {
+      updateData.email = req.body.email;
+    }
+
+    if (req.imageUrl) {
+      updateData.profilePic = req.imageUrl;
+    }
+    const updateUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).select("-password");
     res.status(200).json({
       message: "profile update successfully",
       user: updateUser
@@ -95,8 +108,8 @@ const getAllContacts = async (req, res) => {
 
     const page = parseInt(req.query.page) || 1
     const limit = parseInt(req.query.limit) || 10
-
     const skip = (page - 1) * limit
+
     let query = { _id: { $ne: loggedInUserId } };
     if (search) {
       query.fullName = { $regex: search, $options: "i" };
@@ -116,7 +129,7 @@ const getAllContacts = async (req, res) => {
 };
 const uploadImg = async (req, res) => {
   try {
-    console.log(req.file);
+    // console.log(req.file);
 
     res.status(200).json({
       success: true,
@@ -129,5 +142,5 @@ const uploadImg = async (req, res) => {
   }
 };
 
-module.exports = { signUp, login, getProfile, updateProfile, getAllContacts ,uploadImg }
+module.exports = { signUp, login, getProfile, updateProfile, getAllContacts, uploadImg }
 
