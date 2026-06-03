@@ -7,6 +7,9 @@ import MainLayout from './layouts/MainLayout';
 import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import Group from './pages/Group';
+import { io } from "socket.io-client"
+import { useEffect } from 'react';
+
 const router = createBrowserRouter([
   {
     path: "/",
@@ -38,7 +41,7 @@ const router = createBrowserRouter([
       },
       {
         path: "group/:groupId",
-        element: <Group/>,
+        element: <Group />,
       },
       {
         path: "profile",
@@ -53,6 +56,14 @@ const router = createBrowserRouter([
   }
 ])
 const App = () => {
+  
+  const socket = io("http://localhost:4000")
+  useEffect(() => {
+    socket.on("connect", () => {
+      console.log("connected", socket.id);
+    })
+  }, [])
+
   return (
     <>
       <Toaster position="top-right" />

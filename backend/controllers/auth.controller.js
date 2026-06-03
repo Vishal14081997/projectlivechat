@@ -77,7 +77,7 @@ const getProfile = async (req, res) => {
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user._id;
-    const updateData = {};
+    const updateData = {...req.body};
 
     if (req.body.fullName) {
       updateData.fullName = req.body.fullName;
@@ -91,6 +91,7 @@ const updateProfile = async (req, res) => {
       updateData.profilePic = req.imageUrl;
     }
     const updateUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).select("-password");
+    
     res.status(200).json({
       message: "profile update successfully",
       user: updateUser

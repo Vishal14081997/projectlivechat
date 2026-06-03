@@ -71,6 +71,7 @@ const Profile = () => {
     }
   };
   const handleImageChange = (e) => {
+    console.log(e.target);
     const file = e.target.files[0];
     if (file) {
       setSelectedImage(file);
@@ -109,7 +110,7 @@ const Profile = () => {
       <div className="bg-primary pb-8 pt-4 flex flex-col items-center">
         <label className="w-20 h-20 rounded-full bg-white/20 flex items-center justify-center cursor-pointer overflow-hidden mb-3">
           {
-            selectedImage || formData.profilePic ? (
+            selectedImage ? (
               <img
                 src={selectedImage ? URL.createObjectURL(selectedImage) : formData.profilePic}
                 className="w-full h-full object-cover rounded-full"
