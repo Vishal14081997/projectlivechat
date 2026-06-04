@@ -1,7 +1,6 @@
 const User = require("../models/User")
 const jwt = require("jsonwebtoken")
 
-
 const signUp = async (req, res) => {
   try {
     const { email, fullName, password } = req.body
@@ -13,7 +12,7 @@ const signUp = async (req, res) => {
     const user = await User.findOne({ email })
     if (user) return res.status(400).json({ message: "user alredy exists" })
 
-    const newUser = await User.create({ email , fullName, password })
+    const newUser = await User.create({ email, fullName, password })
 
     res.status(201).json({
       message: "Account create successfully",
@@ -25,7 +24,6 @@ const signUp = async (req, res) => {
     res.status(500).json({ message: error.message })
   }
 }
-
 const login = async (req, res) => {
   try {
     const { email, password } = req.body;
@@ -35,10 +33,16 @@ const login = async (req, res) => {
 
     const user = await User.findOne({ email })
 
-    console.log(user);
-
+    if (!user) {
+      return res.status(404).json({
+        message: "User not found",
+      });
+    }
+    // console.log(user);
     if (user.password !== password) {
-      return res.status(400).json({ message: "password is increate" })
+      return res.status(400).json({
+        message: "Invalid password",
+      });
     }
     const payload = {
       userId: user._id,
@@ -73,11 +77,10 @@ const getProfile = async (req, res) => {
     res.status(500).json({ message: "Server error" });
   }
 }
-
 const updateProfile = async (req, res) => {
   try {
     const userId = req.user._id;
-    const updateData = {...req.body};
+    const updateData = { ...req.body };
 
     if (req.body.fullName) {
       updateData.fullName = req.body.fullName;
@@ -91,7 +94,7 @@ const updateProfile = async (req, res) => {
       updateData.profilePic = req.imageUrl;
     }
     const updateUser = await User.findByIdAndUpdate(userId, updateData, { new: true }).select("-password");
-    
+
     res.status(200).json({
       message: "profile update successfully",
       user: updateUser
@@ -101,7 +104,6 @@ const updateProfile = async (req, res) => {
     res.status(500).json({ message: "Failed to update profile" });
   }
 }
-
 const getAllContacts = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;

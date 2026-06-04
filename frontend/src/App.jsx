@@ -62,6 +62,18 @@ const App = () => {
     socket.on("connect", () => {
       console.log("connected", socket.id);
     })
+    // socket.on("event" ,(m)=>{
+    //   console.log(m);
+    // })
+
+    // socket.on("welcome" ,(m)=>{
+    //   console.log(m);
+    // })
+    
+    return ()=>{
+      socket.disconnect();
+    };
+
   }, [])
 
   return (

@@ -68,7 +68,7 @@ const MainLayout = () => {
       <div className="bg-gray-100 p-3 w-1/4 ">
 
         {/* Header */}
-        <div className="bg-[#075E54] px-4 py-4 flex items-center justify-between">
+        <div className="bg-primary px-4 py-4 flex items-center justify-between">
           <h1 className="text-white text-lg font-semibold">
             {user.fullName}
           </h1>
@@ -93,7 +93,7 @@ const MainLayout = () => {
             onClick={() => setActiveTab("chats")}
             className={`flex-1 py-2 text-sm font-medium transition
               ${activeTab === "chats"
-                ? "text-[#075E54] border-b-2 border-[#075E54]"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-500"
               }`}
           >
@@ -104,7 +104,7 @@ const MainLayout = () => {
             onClick={() => setActiveTab("groups")}
             className={`flex-1 py-2 text-sm font-medium transition
               ${activeTab === "groups"
-                ? "text-[#075E54] border-b-2 border-[#075E54]"
+                ? "text-primary border-b-2 border-primary"
                 : "text-gray-500"
               }`}
           >
@@ -128,7 +128,7 @@ const MainLayout = () => {
                   className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-200 border-b border-gray-100"
                 >
                   <div className="relative ">
-                    <div className="w-12 h-12 rounded-full bg-[#075E54] text-white flex items-center justify-center font-medium text-lg overflow-hidden">
+                    <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-medium text-lg overflow-hidden">
                       {c.profilePic ? (
                         <img
                           src={c.profilePic}
@@ -168,7 +168,7 @@ const MainLayout = () => {
                     onClick={() => navigate(`/group/${g._id}`)}
                     className="flex items-center gap-3 px-4 py-3 cursor-pointer hover:bg-gray-200 border-b border-gray-100"
                   >
-                    <div className="w-12 h-12 rounded-full bg-[#075E54] text-white flex items-center justify-center font-medium text-lg overflow-hidden">
+                    <div className="w-12 h-12 rounded-full bg-primary text-white flex items-center justify-center font-medium text-lg overflow-hidden">
                       {g.groupIcon ? (
                         <img
                           src={g.groupIcon}

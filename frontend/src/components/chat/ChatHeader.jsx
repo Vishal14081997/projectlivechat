@@ -5,14 +5,13 @@ const ChatHeader = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="px-4 py-3 bg-[#075E54] flex items-center gap-3">
+    <div className="px-4 py-3 bg-primary flex items-center gap-3">
       <button
         onClick={() => navigate("/chat")}
         className=" text-white text-2xl mr-1 p-2 -m-2"
       >
         <IoArrowBackCircleOutline />
       </button>
-
       <div
         className="w-9 h-9 rounded-full bg-white text-[#272626] flex items-center justify-center font-medium text-lg overflow-hidden cursor-pointer"
       >
