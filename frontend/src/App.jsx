@@ -56,7 +56,7 @@ const router = createBrowserRouter([
   }
 ])
 const App = () => {
-  
+
   const socket = io("http://localhost:4000")
   useEffect(() => {
     socket.on("connect", () => {
@@ -69,8 +69,8 @@ const App = () => {
     // socket.on("welcome" ,(m)=>{
     //   console.log(m);
     // })
-    
-    return ()=>{
+
+    return () => {
       socket.disconnect();
     };
 

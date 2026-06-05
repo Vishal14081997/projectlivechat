@@ -13,11 +13,11 @@ dotenv.config();
 
 const app = express();
 const server = createServer(app)
+
 const io = new Server(server, {
     cors: {
         origin: "*",
-        credentials: true,
-        methods: ["GET", "POST"]
+        credentials: true
     }
 })
 
@@ -29,6 +29,7 @@ app.use("/api", messageRoutes)
 
 const userMap = {}
 io.on('connection', (socket) => {
+    // console.log("Connected:", socket.user.fullName);
      const userId =socket.handshake.query.userId
      userMap[userId] = socket.id;
     // console.log('a user connected')
