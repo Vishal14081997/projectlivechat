@@ -8,7 +8,8 @@ import Chat from './pages/Chat';
 import Profile from './pages/Profile';
 import Group from './pages/Group';
 import { io } from "socket.io-client"
-import { useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
+import { SocketContext } from './context/SocketContext';
 
 const router = createBrowserRouter([
   {
@@ -56,11 +57,17 @@ const router = createBrowserRouter([
   }
 ])
 const App = () => {
+  const [socketConnected, setSocketConnected] = useState(false);
+  const socketRef = useRef()
+  const token = localStorage.getItem("token")
 
-  const socket = io("http://localhost:4000")
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("connected", socket.id);
+    socketRef.current = io("http://localhost:4000", {
+      auth: { token }
+    })
+    socketRef.current.on("connect", () => {
+      console.log("connected", socketRef.current.id);
+      setSocketConnected(true)
     })
     // socket.on("event" ,(m)=>{
     //   console.log(m);
@@ -69,17 +76,22 @@ const App = () => {
     // socket.on("welcome" ,(m)=>{
     //   console.log(m);
     // })
+    socketRef.current.on("OnlineUsers",(m)=>{
+      console.log(m);
+    })
 
     return () => {
-      socket.disconnect();
+      socketRef.current.disconnect();
     };
 
-  }, [])
+  }, [token])
 
   return (
     <>
-      <Toaster position="top-right" />
-      <RouterProvider router={router} />
+      <SocketContext.Provider value={{ socketRef, socketConnected }}>
+        <Toaster position="top-right" />
+        <RouterProvider router={router} />
+      </SocketContext.Provider>
     </>
   )
 }

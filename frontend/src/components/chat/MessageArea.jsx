@@ -1,9 +1,11 @@
 import React from "react";
+import { useSocket } from "../../context/SocketContext";
 const MessageArea = () => {
-    const MessageArea = () => {
-        return (
-            <div>MessageArea</div>
-        )
-    }
+ const { socketRef, socketConnected } = useSocket();
+ 
+  return (
+    <div>MessageArea</div>
+  )
+
 }
 export default MessageArea;
