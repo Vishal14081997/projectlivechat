@@ -1,16 +1,13 @@
 import React from 'react'
 import ChatHeader from '../components/chat/ChatHeader'
 import MessageArea from '../components/chat/MessageArea'
-import InputBar from '../components/chat/InputBar'
-import {useParams} from "react-router-dom"
+import InputBar from '../components/chat/MessageArea'
 
 const Chat = () => {
-  const {userId} = useParams()
-  console.log(userId);
   
   return (
     <>
-      <ChatHeader userId={userId} />
+      <ChatHeader/>
       <MessageArea/>
       <InputBar/>
     </>

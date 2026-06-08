@@ -2,14 +2,24 @@ const cloudinary = require("../config/cloudinary")
 
 const uploadToCloudinary = async (req, res, next) => {
     try {
-        if(!req.file){
+        if (!req.files) {
             return next()
         }
-        const result = await cloudinary.uploader.upload(req.file.buffer, {
-            folder: "ChatingApp"
-        });
-        req.imageUrl = result.secure_url;
-        req.publicId = result.public_id;
+        const uploadedFiles = [];
+
+        for (const file of req.files) {
+            const result = await cloudinary.uploader.upload(file.path, {
+                resource_type: "auto",
+                folder: "ChatingApp"
+            });
+
+            uploadedFiles.push({
+                type: file.mimetype.split("/")[0],
+                url: result.secure_url
+            });
+            req.imageUrl = result.secure_url;
+        }
+        req.uploadedFiles = uploadedFiles;
         next()
     } catch (error) {
         console.error("cloudinary error:", error.message);

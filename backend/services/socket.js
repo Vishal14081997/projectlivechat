@@ -16,14 +16,19 @@ const initSocket = async (server) => {
         console.log("User connected", socket.user.fullName);
         const userId = socket.userId
         userSocketMap[userId] = socket.id
-        console.log(userSocketMap);
-        io.emit("OnlineUsers", Object.keys(userSocketMap));
+        socket.join(userId.toString())
+        console.log("joined room:",userId.toString());
+        socket.on("disconnect", () => {
+            delete userSocketMap[userId];
+            console.log(`User ${userId} disconnected.`);
+            io.emit("OnlineUsers", Object.keys(userSocketMap));
+        })
     })
+    return io
 }
+console.log("socket all user",userSocketMap);
+
 const getIO = () => {
-    if (!io) {
-        throw new Error("Socket.IO not initialized!");
-    }
     return io;
 };
 module.exports = {
