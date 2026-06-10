@@ -12,21 +12,24 @@ const initSocket = async (server) => {
         }
     })
     io.use(socketAuth)
+    
     io.on("connection", async (socket) => {
         console.log("User connected", socket.user.fullName);
         const userId = socket.userId
         userSocketMap[userId] = socket.id
         socket.join(userId.toString())
-        console.log("joined room:",userId.toString());
+
+        io.emit("OnlineUsers", Object.keys(userSocketMap));
+
         socket.on("disconnect", () => {
             delete userSocketMap[userId];
-            console.log(`User ${userId} disconnected.`);
+            // console.log(`User ${userId} disconnected.`);
             io.emit("OnlineUsers", Object.keys(userSocketMap));
         })
     })
     return io
 }
-console.log("socket all user",userSocketMap);
+console.log("socket all user", userSocketMap);
 
 const getIO = () => {
     return io;

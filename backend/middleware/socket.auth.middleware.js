@@ -6,8 +6,8 @@ const socketAuth = async (socket, next) => {
 
     const token = socket.handshake.headers?.token || socket.handshake.auth?.token;
 
-    console.log("socket headers token", socket.handshake.headers.token)
-    console.log("socket auth token", socket.handshake.auth?.token)
+    // console.log("socket headers token", socket.handshake.headers.token)
+    // console.log("socket auth token", socket.handshake.auth?.token)
 
     if (!token) {
       return next(new Error("No token provided"));
