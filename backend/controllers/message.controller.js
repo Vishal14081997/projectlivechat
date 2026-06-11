@@ -33,9 +33,9 @@ const sendMessage = async (req, res) => {
             senderId,
             receiverId,
             text: text || "",
-            imageUrl: req.imageUrl || "",
-            videoUrl: req.videoUrl || "",
-            audioUrl: req.audioUrl || ""
+            imageUrl: req.imageUrl || [],
+            videoUrl: req.videoUrl || [],
+            audioUrl: req.audioUrl || []
         });
 
         const io = getIO()

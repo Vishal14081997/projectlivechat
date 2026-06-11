@@ -46,6 +46,7 @@ const InputBar = () => {
       <input
         type="file"
         hidden
+        multiple
         ref={fileInputRef}
         onChange={(e) => setAttachments([...e.target.files])}
       />
