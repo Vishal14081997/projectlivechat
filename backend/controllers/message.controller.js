@@ -33,11 +33,12 @@ const sendMessage = async (req, res) => {
             senderId,
             receiverId,
             text: text || "",
-            attachments: req.uploadedFiles || []
+            imageUrl: req.imageUrl || "",
+            videoUrl: req.videoUrl || "",
+            audioUrl: req.audioUrl || ""
         });
 
         const io = getIO()
-        console.log("receiver", receiverId);
         io.to(receiverId.toString()).emit(
             "newMessage",
             newMessage
@@ -71,4 +72,4 @@ const getMessages = async (req, res) => {
         res.status(500).json({ message: "Server error" });
     }
 }
-module.exports = { getUserById, sendMessage,getMessages }
+module.exports = { getUserById, sendMessage, getMessages }

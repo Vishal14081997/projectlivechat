@@ -11,15 +11,18 @@ const messageSchema = new mongoose.Schema({
     text: {
         type: String
     },
-    attachments: [
-        {
-            type: {
-                type: String,
-                enum: ["image", "video", "audio"]
-            },
-            url: String
-        }
-    ],
+    imageUrl: [{
+        type: String,
+        default: "",
+    }],
+    videoUrl: [{
+        type: String,
+        default: "",
+    }],
+    audioUrl: [{
+        type: String,
+        default: "",
+    }],
     location: {
         lat: Number,
         lng: Number

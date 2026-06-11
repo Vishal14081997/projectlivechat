@@ -1,29 +1,37 @@
 const cloudinary = require("../config/cloudinary")
 
 const uploadToCloudinary = async (req, res, next) => {
-    try {
-        if (!req.files) {
-            return next()
-        }
-        const uploadedFiles = [];
-
-        for (const file of req.files) {
-            const result = await cloudinary.uploader.upload(file.path, {
-                resource_type: "auto",
-                folder: "ChatingApp"
-            });
-
-            uploadedFiles.push({
-                type: file.mimetype.split("/")[0],
-                url: result.secure_url
-            });
-            req.imageUrl = result.secure_url;
-        }
-        req.uploadedFiles = uploadedFiles;
-        next()
-    } catch (error) {
-        console.error("cloudinary error:", error.message);
-        return res.status(500).json({ message: "cloudinary error" });
+  try {
+    if (!req.files || req.files.length === 0) {
+      return next();
     }
-}
+    req.imageUrl = [];
+    req.videoUrl = [];
+    req.audioUrl = [];
+
+    for (const file of req.files) {
+      const result = await cloudinary.uploader.upload(file.path, {
+        resource_type: "auto",
+        folder: "ChatingApp",
+      });
+
+      if (file.mimetype.startsWith("image")) {
+        req.imageUrl.push(result.secure_url);
+      }
+
+      if (file.mimetype.startsWith("video")) {
+        req.videoUrl.push(result.secure_url);
+      }
+
+      if (file.mimetype.startsWith("audio")) {
+        req.audioUrl.push(result.secure_url);
+      }
+    }
+
+    next();
+  } catch (error) {
+    console.error("cloudinary error:", error.message);
+    return res.status(500).json({ message: "cloudinary error" });
+  }
+};
 module.exports = uploadToCloudinary;
