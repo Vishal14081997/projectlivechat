@@ -12,6 +12,7 @@ const uploadToCloudinary = async (req, res, next) => {
     for (const file of req.files) {
       const result = await cloudinary.uploader.upload(file.path, {
         resource_type: "auto",
+        allowed_formats: ["jpg", "jpeg", "png", "webp", "mp4", "mp3", "mov", "mkv", "webm"],
         folder: "ChatingApp",
       });
 

@@ -23,6 +23,7 @@ const Login = () => {
       console.log(res.data);
       const token = res.data.data.token
       localStorage.setItem("token" ,token)
+      localStorage.setItem("user", JSON.stringify(res.data.data))
       toast.success(res.data.message);
       setFormData({ email: "", password: "" });
       navigate("/chat")
